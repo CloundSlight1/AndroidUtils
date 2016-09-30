@@ -1,10 +1,9 @@
-package com.wuyz.androidutils.utilcode.utils;
+package com.wuyz.androidutils.utils;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.List;
 
 /**
  * <pre>
@@ -16,10 +15,6 @@ import java.util.List;
  */
 public class ShellUtils {
 
-    private ShellUtils() {
-        throw new UnsupportedOperationException("u can't fuck me...");
-    }
-
     public static final String COMMAND_SU = "su";
     public static final String COMMAND_SH = "sh";
     public static final String COMMAND_EXIT = "exit\n";
@@ -27,67 +22,11 @@ public class ShellUtils {
 
     /**
      * 判断设备是否root
+     *
      * @return {@code true}: root<br>{@code false}: 没root
      */
     public static boolean isRoot() {
-        return execCmd("echo root", true, false).result == 0;
-    }
-
-    /**
-     * 是否是在root下执行命令
-     *
-     * @param command 命令
-     * @param isRoot  是否root
-     * @return CommandResult
-     */
-    public static CommandResult execCmd(String command, boolean isRoot) {
-        return execCmd(new String[]{command}, isRoot, true);
-    }
-
-    /**
-     * 是否是在root下执行命令
-     *
-     * @param commands 多条命令链表
-     * @param isRoot   是否root
-     * @return CommandResult
-     */
-    public static CommandResult execCmd(List<String> commands, boolean isRoot) {
-        return execCmd(commands == null ? null : commands.toArray(new String[]{}), isRoot, true);
-    }
-
-    /**
-     * 是否是在root下执行命令
-     *
-     * @param commands 多条命令数组
-     * @param isRoot   是否root
-     * @return CommandResult
-     */
-    public static CommandResult execCmd(String[] commands, boolean isRoot) {
-        return execCmd(commands, isRoot, true);
-    }
-
-    /**
-     * 是否是在root下执行命令
-     *
-     * @param command         命令
-     * @param isRoot          是否root
-     * @param isNeedResultMsg 是否需要结果消息
-     * @return CommandResult
-     */
-    public static CommandResult execCmd(String command, boolean isRoot, boolean isNeedResultMsg) {
-        return execCmd(new String[]{command}, isRoot, isNeedResultMsg);
-    }
-
-    /**
-     * 是否是在root下执行命令
-     *
-     * @param commands        命令链表
-     * @param isRoot          是否root
-     * @param isNeedResultMsg 是否需要结果消息
-     * @return CommandResult
-     */
-    public static CommandResult execCmd(List<String> commands, boolean isRoot, boolean isNeedResultMsg) {
-        return execCmd(commands == null ? null : commands.toArray(new String[]{}), isRoot, isNeedResultMsg);
+        return execCmd(new String[] {"echo root"}, true, false).result == 0;
     }
 
     /**

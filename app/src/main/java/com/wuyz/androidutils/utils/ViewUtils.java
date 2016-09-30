@@ -1,32 +1,55 @@
-package com.wuyz.androidutils.utilcode.utils;
+package com.wuyz.androidutils.utils;
 
 import android.app.Activity;
 import android.app.KeyguardManager;
 import android.content.Context;
-import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
 import android.os.Build;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.View;
-import android.view.Window;
 import android.view.WindowManager;
-import android.view.WindowManager.LayoutParams;
-
-import java.lang.reflect.Method;
 
 /**
- * <pre>
- *     author: Blankj
- *     blog  : http://blankj.com
- *     time  : 2016/8/2
- *     desc  : 屏幕相关工具类
- * </pre>
+ * Created by wuyz on 2016/9/29.
  */
-public class ScreenUtils {
 
-    private ScreenUtils() {
-        throw new UnsupportedOperationException("u can't fuck me...");
+public class ViewUtils {
+
+    public static void setStatusBarTransparent(Activity activity) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS
+                    | WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+            activity.getWindow().setStatusBarColor(Color.TRANSPARENT);
+        }
+    }
+
+    public static Bitmap createCircleBitmap(Bitmap source, boolean recycleSource) {
+        int width = source.getWidth();
+        int height = source.getHeight();
+        int diameter = Math.min(width, height);
+        Paint paint = new Paint();
+        paint.setAntiAlias(true);
+        Bitmap result = Bitmap.createBitmap(diameter, diameter, Bitmap.Config.ARGB_8888);
+        if (result != null) {
+            Canvas canvas = new Canvas(result);
+            canvas.drawCircle((float) (diameter / 2), (float) (diameter / 2), (float) (diameter / 2), paint);
+            paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
+            canvas.drawBitmap(source, (float) ((diameter - width) / 2), (float) ((diameter - height) / 2), paint);
+            if (recycleSource) {
+                source.recycle();
+                source = null;
+            }
+        } else {
+            result = source;
+        }
+
+        return result;
     }
 
     /**
@@ -67,26 +90,10 @@ public class ScreenUtils {
     public static void setTransparentStatusBar(Activity activity) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             //透明状态栏
-            activity.getWindow().addFlags(LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
             //透明导航栏
-            activity.getWindow().addFlags(LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+            activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
         }
-    }
-
-    /**
-     * 隐藏状态栏
-     * <p>也就是设置全屏，一定要在setContentView之前调用，否则报错</p>
-     * <p>此方法Activity可以继承AppCompatActivity</p>
-     * <p>启动的时候状态栏会显示一下再隐藏，比如QQ的欢迎界面</p>
-     * <p>在配置文件中Activity加属性android:theme="@android:style/Theme.NoTitleBar.Fullscreen"</p>
-     * <p>如加了以上配置Activity不能继承AppCompatActivity，会报错</p>
-     *
-     * @param activity activity
-     */
-    public static void hideStatusBar(Activity activity) {
-        activity.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        activity.getWindow().setFlags(LayoutParams.FLAG_FULLSCREEN,
-                LayoutParams.FLAG_FULLSCREEN);
     }
 
     /**
@@ -106,17 +113,6 @@ public class ScreenUtils {
     }
 
     /**
-     * 判断状态栏是否存在
-     *
-     * @param activity activity
-     * @return {@code true}: 存在<br>{@code false}: 不存在
-     */
-    public static boolean isStatusBarExists(Activity activity) {
-        LayoutParams params = activity.getWindow().getAttributes();
-        return (params.flags & LayoutParams.FLAG_FULLSCREEN) != LayoutParams.FLAG_FULLSCREEN;
-    }
-
-    /**
      * 获取ActionBar高度
      *
      * @param activity activity
@@ -128,61 +124,6 @@ public class ScreenUtils {
             return TypedValue.complexToDimensionPixelSize(tv.data, activity.getResources().getDisplayMetrics());
         }
         return 0;
-    }
-
-    /**
-     * 显示通知栏
-     * <p>需添加权限 {@code <uses-permission android:name="android.permission.EXPAND_STATUS_BAR"/>}</p>
-     *
-     * @param context        上下文
-     * @param isSettingPanel {@code true}: 打开设置<br>{@code false}: 打开通知
-     */
-    public static void showNotificationBar(Context context, boolean isSettingPanel) {
-        String methodName = (Build.VERSION.SDK_INT <= 16) ? "expand"
-                : (isSettingPanel ? "expandSettingsPanel" : "expandNotificationsPanel");
-        invokePanels(context, methodName);
-    }
-
-    /**
-     * 隐藏通知栏
-     * <p>需添加权限 {@code <uses-permission android:name="android.permission.EXPAND_STATUS_BAR"/>}</p>
-     *
-     * @param context 上下文
-     */
-    public static void hideNotificationBar(Context context) {
-        String methodName = (Build.VERSION.SDK_INT <= 16) ? "collapse" : "collapsePanels";
-        invokePanels(context, methodName);
-    }
-
-    /**
-     * 反射唤醒通知栏
-     *
-     * @param context    上下文
-     * @param methodName 方法名
-     */
-    private static void invokePanels(Context context, String methodName) {
-        try {
-            Object service = context.getSystemService("statusbar");
-            Class<?> statusBarManager = Class.forName("android.app.StatusBarManager");
-            Method expand = statusBarManager.getMethod(methodName);
-            expand.invoke(service);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * 设置屏幕为横屏
-     * <p>还有一种就是在Activity中加属性android:screenOrientation="landscape"</p>
-     * <p>不设置Activity的android:configChanges时，切屏会重新调用各个生命周期，切横屏时会执行一次，切竖屏时会执行两次</p>
-     * <p>设置Activity的android:configChanges="orientation"时，切屏还是会重新调用各个生命周期，切横、竖屏时只会执行一次</p>
-     * <p>设置Activity的android:configChanges="orientation|keyboardHidden|screenSize"（4.0以上必须带最后一个参数）时
-     * 切屏不会重新调用各个生命周期，只会执行onConfigurationChanged方法</p>
-     *
-     * @param activity activity
-     */
-    public static void setLandscape(Activity activity) {
-        activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
     }
 
     /**
@@ -230,8 +171,7 @@ public class ScreenUtils {
      * @return {@code true}: 是<br>{@code false}: 否
      */
     public static boolean isScreenLock(Context context) {
-        KeyguardManager km = (KeyguardManager) context
-                .getSystemService(Context.KEYGUARD_SERVICE);
+        KeyguardManager km = (KeyguardManager) context.getSystemService(Context.KEYGUARD_SERVICE);
         return km.inKeyguardRestrictedInputMode();
     }
 }

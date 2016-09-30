@@ -8,12 +8,20 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.wuyz.androidutils.view.RoundImageView$MainActivity"
+    tools:context="com.wuyz.androidutils.view.MainActivity"
     android:fitsSystemWindows="true"
     android:background="@android:color/darker_gray">
 
     <com.wuyz.androidutils.view.RoundImageView
+        android:id="@+id/round_image"
         android:layout_width="80dp"
         android:layout_height="80dp"
         android:src="@drawable/test" />
+
+    <Button
+        android:id="@+id/recyclerView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@id/round_image"
+        android:text="recyclerView"/>
 </RelativeLayout>

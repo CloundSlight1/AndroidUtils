@@ -1,4 +1,6 @@
-package com.wuyz.androidutils;
+package com.wuyz.androidutils.utils;
+
+import com.wuyz.androidutils.Log2;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -11,7 +13,6 @@ import java.util.zip.ZipOutputStream;
 
 /**
  * Created by wuyz on 2016/9/29.
- *
  */
 
 public class FileUtils {
@@ -211,4 +212,5 @@ public class FileUtils {
         }
         return null;
     }
+
 }
