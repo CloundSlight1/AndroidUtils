@@ -2,6 +2,9 @@ package com.wuyz.androidutils.utils;
 
 import android.text.TextUtils;
 
+import java.text.SimpleDateFormat;
+import java.util.Locale;
+
 /**
  * <pre>
  *     author: Blankj
@@ -11,6 +14,8 @@ import android.text.TextUtils;
  * </pre>
  */
 public class StringUtils {
+
+    public static SimpleDateFormat longDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
 
     /**
      * 转化为半角字符
