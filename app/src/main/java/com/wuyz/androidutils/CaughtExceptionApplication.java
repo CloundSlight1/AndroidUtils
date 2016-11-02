@@ -3,7 +3,7 @@ package com.wuyz.androidutils;
 import android.app.Application;
 import android.os.Environment;
 
-import com.wuyz.androidutils.utils.StringUtils;
+import com.wuyz.androidutils.manager.StringUtils;
 
 import java.io.BufferedWriter;
 import java.io.File;

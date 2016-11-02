@@ -1,4 +1,4 @@
-package com.wuyz.androidutils.utils;
+package com.wuyz.androidutils.manager;
 
 import android.app.Activity;
 import android.app.KeyguardManager;
@@ -13,6 +13,7 @@ import android.os.Build;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.View;
+import android.view.Window;
 import android.view.WindowManager;
 
 /**
@@ -22,10 +23,15 @@ import android.view.WindowManager;
 public class ViewUtils {
 
     public static void setStatusBarTransparent(Activity activity) {
+        Window window = activity.getWindow();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS
+            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS
                     | WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
-            activity.getWindow().setStatusBarColor(Color.TRANSPARENT);
+            window.setStatusBarColor(Color.TRANSPARENT);
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
         }
     }
 
@@ -76,24 +82,6 @@ public class ViewUtils {
         DisplayMetrics outMetrics = new DisplayMetrics();// 创建了一张白纸
         windowManager.getDefaultDisplay().getMetrics(outMetrics);// 给白纸设置宽高
         return outMetrics.heightPixels;
-    }
-
-    /**
-     * 设置透明状态栏(api大于19方可使用)
-     * <p>可在Activity的onCreat()中调用</p>
-     * <p>需在顶部控件布局中加入以下属性让内容出现在状态栏之下</p>
-     * <p>android:clipToPadding="true"</p>
-     * <p>android:fitsSystemWindows="true"</p>
-     *
-     * @param activity activity
-     */
-    public static void setTransparentStatusBar(Activity activity) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            //透明状态栏
-            activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-            //透明导航栏
-            activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
-        }
     }
 
     /**

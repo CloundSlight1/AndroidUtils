@@ -7,10 +7,11 @@ import android.view.View;
 import android.view.Window;
 
 import com.wuyz.androidutils.R;
-import com.wuyz.androidutils.utils.ViewUtils;
+import com.wuyz.androidutils.manager.ViewUtils;
 
 /**
  * Created by wuyz on 2016/9/29.
+ *
  */
 
 public class MainActivity extends Activity implements View.OnClickListener {

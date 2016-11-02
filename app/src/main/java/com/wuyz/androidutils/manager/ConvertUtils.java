@@ -1,4 +1,4 @@
-package com.wuyz.androidutils.utils;
+package com.wuyz.androidutils.manager;
 
 /**
  * <pre>
