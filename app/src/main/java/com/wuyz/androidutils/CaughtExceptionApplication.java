@@ -18,6 +18,8 @@ import java.util.Date;
 
 public class CaughtExceptionApplication extends Application {
 
+    private static final String TAG = "CaughtExceptionApplication";
+
     private Thread.UncaughtExceptionHandler handler;
 
     @Override
@@ -27,23 +29,33 @@ public class CaughtExceptionApplication extends Application {
         Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
             @Override
             public void uncaughtException(Thread t, Throwable e) {
-//                Toast.makeText(MyApp.this, e.getMessage(), Toast.LENGTH_LONG).show();
-                File file = getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS);
+                Log2.e(TAG, e);
+                File file;
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
+                    file = getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS);
+                } else {
+                    file = getExternalFilesDir("Documents");
+                }
                 if (!file.exists()) {
                     file.mkdirs();
                 }
-                file = new File(file, "error.txt");
-                try (PrintWriter writer = new PrintWriter(new BufferedWriter(new FileWriter(file, true)))) {
-                    writer.println(System.lineSeparator() + "***************************************"
-                            + System.lineSeparator() + StringUtils.longDateFormat.format(new Date()) + System.lineSeparator());
+                file = new File(file, "error");
+                PrintWriter writer = null;
+                try {
+                    writer = new PrintWriter(new BufferedWriter(new FileWriter(file, false)));
+                    writer.println(StringUtils.longDateFormat.format(new Date()));
                     e.printStackTrace(writer);
-                    Throwable throwable;
-                    while ((throwable = e.getCause()) != null) {
+                    Throwable throwable = e.getCause();
+                    while (throwable != null) {
                         throwable.printStackTrace(writer);
+                        throwable = throwable.getCause();
                     }
                     writer.close();
                 } catch (Exception e2) {
-                    e2.printStackTrace();
+                    Log2.e(TAG, e2);
+                } finally {
+                    if (writer != null)
+                        writer.close();
                 }
                 if (handler != null) {
                     handler.uncaughtException(t, e);
