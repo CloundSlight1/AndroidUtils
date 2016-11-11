@@ -22,6 +22,7 @@ public class Application extends android.app.Application {
 
     @Override
     public void onCreate() {
+        Log2.d(TAG, "onCreate");
         super.onCreate();
         instance = this;
         initExceptionHandler();
