@@ -1,6 +1,5 @@
 package com.wuyz.androidutils;
 
-import android.app.Application;
 import android.os.Environment;
 
 import com.wuyz.androidutils.manager.StringUtils;
@@ -16,16 +15,20 @@ import java.util.Date;
  *
  */
 
-public class CaughtExceptionApplication extends Application {
+public class Application extends android.app.Application {
 
-    private static final String TAG = "CaughtExceptionApplication";
-
-    private Thread.UncaughtExceptionHandler handler;
+    private static final String TAG = "Application";
+    private static Application instance;
 
     @Override
     public void onCreate() {
         super.onCreate();
-        handler = Thread.getDefaultUncaughtExceptionHandler();
+        instance = this;
+        initExceptionHandler();
+    }
+
+    private void initExceptionHandler() {
+        final Thread.UncaughtExceptionHandler handler = Thread.getDefaultUncaughtExceptionHandler();
         Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
             @Override
             public void uncaughtException(Thread t, Throwable e) {
@@ -43,7 +46,7 @@ public class CaughtExceptionApplication extends Application {
                 PrintWriter writer = null;
                 try {
                     writer = new PrintWriter(new BufferedWriter(new FileWriter(file, false)));
-                    writer.println(StringUtils.longDateFormat.format(new Date()));
+                    writer.println(StringUtils.dateFormat.format(new Date()));
                     e.printStackTrace(writer);
                     Throwable throwable = e.getCause();
                     while (throwable != null) {
@@ -62,5 +65,9 @@ public class CaughtExceptionApplication extends Application {
                 }
             }
         });
+    }
+
+    public static Application getInstance() {
+        return instance;
     }
 }
