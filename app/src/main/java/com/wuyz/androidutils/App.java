@@ -15,10 +15,10 @@ import java.util.Date;
  *
  */
 
-public class Application extends android.app.Application {
+public class App extends android.app.Application {
 
-    private static final String TAG = "Application";
-    private static Application instance;
+    private static final String TAG = "App";
+    private static App instance;
 
     @Override
     public void onCreate() {
@@ -68,7 +68,7 @@ public class Application extends android.app.Application {
         });
     }
 
-    public static Application getInstance() {
+    public static App getInstance() {
         return instance;
     }
 }

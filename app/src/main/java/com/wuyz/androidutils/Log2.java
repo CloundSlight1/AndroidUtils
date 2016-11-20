@@ -96,7 +96,7 @@ public class Log2 {
         final String s = stringBuilder.toString();
         stringBuilder.setLength(0);
 
-        final File path = new File(Application.getInstance().getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS), "log");
+        final File path = new File(App.getInstance().getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS), "log");
         if (!path.exists())
             path.mkdirs();
         if (!path.exists() || !path.isDirectory()) {
