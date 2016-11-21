@@ -15,9 +15,10 @@ public class Log2 {
     private static final String TAG = "androidutils";
 
     // adb shell setprop log.tag.androidutils DEBUG
-    private final static boolean ENABLE = BuildConfig.DEBUG || Log.isLoggable(TAG, Log.DEBUG);
-    private final static int LENGTH = 100 * 1024;
-    private final static StringBuilder stringBuilder = new StringBuilder(LENGTH);
+    public static final boolean ENABLE = BuildConfig.DEBUG || Log.isLoggable(TAG, Log.DEBUG);
+    private static final int LENGTH = 10 * 1024;
+    private static final StringBuilder stringBuilder = new StringBuilder(LENGTH);
+    public static final String ACTION_FLUSH_LOG = "log2.action.FLUSH_LOG";
 
     public static void v(String className, String format, Object... args) {
         if (ENABLE) {

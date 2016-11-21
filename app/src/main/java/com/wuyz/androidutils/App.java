@@ -1,5 +1,9 @@
 package com.wuyz.androidutils;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Environment;
 
 import com.wuyz.androidutils.manager.StringUtils;
@@ -20,12 +24,25 @@ public class App extends android.app.Application {
     private static final String TAG = "App";
     private static App instance;
 
+    private BroadcastReceiver receiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            Log2.d(TAG, "onReceive %s", action);
+            if (Log2.ACTION_FLUSH_LOG.equals(action)) {
+                Log2.flush();
+            }
+        }
+    };
+
     @Override
     public void onCreate() {
         Log2.d(TAG, "onCreate");
         super.onCreate();
         instance = this;
         initExceptionHandler();
+        if (Log2.ENABLE)
+            registerReceiver(receiver, new IntentFilter(Log2.ACTION_FLUSH_LOG));
     }
 
     private void initExceptionHandler() {

@@ -12,6 +12,7 @@ import android.widget.ImageView;
 
 /**
  * Created by wuyz on 04/09/2016.
+ * RoundImageView
  */
 public class RoundImageView extends ImageView {
 
@@ -39,10 +40,12 @@ public class RoundImageView extends ImageView {
             BitmapDrawable drawable = (BitmapDrawable) getDrawable();
             if (drawable != null) {
                 Bitmap bitmap = drawable.getBitmap();
-                if (bitmap != null) {
-                    this.bitmap = Bitmap.createScaledBitmap(bitmap, w, w, true);
-                    bitmap.recycle();
-                    bitmap = null;
+                if (bitmap != null && !bitmap.isRecycled()) {
+                    this.bitmap = Bitmap.createScaledBitmap(bitmap, w, w, false);
+                    if (this.bitmap != bitmap) {
+                        setImageBitmap(this.bitmap);
+                        Runtime.getRuntime().gc();
+                    }
                     paint.setShader(new BitmapShader(this.bitmap, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP));
                 }
             }
