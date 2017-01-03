@@ -20,5 +20,15 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_toEndOf="@id/round_image"
-        android:text="recyclerView"/>
+        android:text="recyclerView"
+        android:onClick="onClick"/>
+
+    <Button
+        android:id="@+id/okHttp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@id/round_image"
+        android:text="okHttp"
+        android:layout_below="@id/recyclerView"
+        android:onClick="onClick"/>
 </RelativeLayout>
