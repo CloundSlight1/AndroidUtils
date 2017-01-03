@@ -17,7 +17,7 @@ public class Log2 {
     // adb shell setprop log.tag.androidutils DEBUG
     public static final boolean ENABLE = BuildConfig.DEBUG || Log.isLoggable(TAG, Log.DEBUG);
     private static final int LENGTH = 10 * 1024;
-    private static final StringBuilder stringBuilder = new StringBuilder(LENGTH);
+    private static final StringBuilder stringBuilder = new StringBuilder(LENGTH << 1);
     public static final String ACTION_FLUSH_LOG = "log2.action.FLUSH_LOG";
 
     public static void v(String className, String format, Object... args) {
@@ -86,8 +86,12 @@ public class Log2 {
     private static void writeToFile(String level, String msg) {
         if (level == null || msg == null || msg.isEmpty())
             return;
-        stringBuilder.append(StringUtils.dateFormat4.format(new Date())).append(' ').append(level).append(' ')
-                .append(msg).append(System.lineSeparator());
+		try {
+            stringBuilder.append(StringUtils.dateFormat4.format(new Date())).append(' ').append(level).append(' ')
+                    .append(msg).append('\n');
+        } catch (Exception e){
+            e.printStackTrace();
+        }
         if (stringBuilder.length() < LENGTH)
             return;
         flush();
