@@ -23,6 +23,7 @@ public class App extends android.app.Application {
 
     private static final String TAG = "App";
     private static App instance;
+    private DaoSession daoSession;
 
     private BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
@@ -43,6 +44,9 @@ public class App extends android.app.Application {
         initExceptionHandler();
         if (Log2.ENABLE)
             registerReceiver(receiver, new IntentFilter(Log2.ACTION_FLUSH_LOG));
+
+        DaoMaster.DevOpenHelper openHelper = new DaoMaster.DevOpenHelper(this, "test_db");
+        daoSession = new DaoMaster(openHelper.getWritableDb()).newSession();
     }
 
     private void initExceptionHandler() {
@@ -87,5 +91,9 @@ public class App extends android.app.Application {
 
     public static App getInstance() {
         return instance;
+    }
+
+    public DaoSession getDaoSession() {
+        return daoSession;
     }
 }

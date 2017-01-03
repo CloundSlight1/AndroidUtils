@@ -42,6 +42,9 @@ public class MainActivity extends Activity implements View.OnClickListener {
             case R.id.recyclerView:
                 startActivity(new Intent(this, RecyclerViewActivity.class));
                 break;
+            case R.id.daoDemo:
+                startActivity(new Intent(this, DaoDemoActivity.class));
+                break;
             case R.id.okHttp:
                 Request.Builder builder = new Request.Builder();
                 builder.get().url("http://www.codeceo.com/");

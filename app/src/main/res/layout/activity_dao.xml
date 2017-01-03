@@ -5,29 +5,20 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.wuyz.androidutils.view.MainActivity"
-    android:fitsSystemWindows="true"
-    android:background="#3f51b5">
+    android:fitsSystemWindows="true">
 
     <Button
-        android:id="@+id/recyclerView"
+        android:id="@+id/button1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="recyclerView"
+        android:text="add"
         android:onClick="onClick"/>
 
     <Button
-        android:id="@+id/okHttp"
+        android:id="@+id/button2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="okHttp"
-        android:layout_below="@id/recyclerView"
-        android:onClick="onClick"/>
-
-    <Button
-        android:id="@+id/daoDemo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="daoDemo"
-        android:layout_below="@id/okHttp"
-        android:onClick="onClick"/>
+        android:text="query"
+        android:onClick="onClick"
+        android:layout_toEndOf="@id/button1"/>
 </RelativeLayout>
